@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WebCrawler</string>
+    <string name="prompt_board">공지사항 선택</string>
+    <string-array name="arr_board">
+        <item>KU 행정실 공지사항</item>
+        <item>SEOUL ACCORD</item>
+    </string-array>
 </resources>

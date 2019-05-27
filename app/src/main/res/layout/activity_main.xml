@@ -21,6 +21,10 @@
             android:textColor="#000000"
             android:textAlignment="center"/>
 
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Spinner>
+
     <TextView
             android:text="공지사항"
             android:paddingVertical="10dp"
