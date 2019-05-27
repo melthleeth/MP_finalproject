@@ -14,7 +14,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import java.io.IOException
 
-
+// ?
 class Board : AppCompatActivity() {
     var list:ArrayList<ItemObject> = ArrayList()
     var data1:ArrayList<Data1> = ArrayList() // 공지사항
