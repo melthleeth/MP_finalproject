@@ -22,6 +22,7 @@
             android:textAlignment="center"/>
 
     <Spinner
+            android:id="@+id/spinner_board"
             android:background="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +53,8 @@
     </android.support.v7.widget.RecyclerView>
 
     <TextView
-            android:text="취업공지"
+            android:id="@+id/txt_recyclerView2"
+            android:text="@string/txt_board1"
             android:paddingVertical="10dp"
             android:paddingHorizontal="30dp"
             android:layout_marginVertical="10dp"

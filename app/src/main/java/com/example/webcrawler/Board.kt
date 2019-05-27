@@ -9,28 +9,67 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import android.widget.AdapterView
+import android.widget.Toast
 import java.io.IOException
 
 
 class Board : AppCompatActivity() {
     var list:ArrayList<ItemObject> = ArrayList()
-    var data1:ArrayList<Data1> = ArrayList()
-    var data2:ArrayList<Data1> = ArrayList()
+    var data1:ArrayList<Data1> = ArrayList() // 공지사항
+    var data2:ArrayList<Data1> = ArrayList() // 취업공지
+    var data3:ArrayList<Data1> = ArrayList() // 공지사항
+    var data4:ArrayList<Data1> = ArrayList() // 특강공지
 
     val addr1 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=11892&menuId=11896&forumId=11914&forumId=18240&titleImg=/cms/Site/UserFiles/Image/internet/main_notice_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_notice_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
     val addr2 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=3266851&menuId=12351727&forumId=12368452&forumId=12368521&titleImg=/cms/Site/UserFiles/Image/internet/main_board_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_board_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
 
 
-//    lateinit var adapter: MyAdapter
+    lateinit var adapter1: DataAdapter
+    lateinit var adapter2: DataAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
 
-//        sample()
-//        Description().execute()
         doParse().execute()
         doParse2().execute()
+
+        spinner_board.onItemSelectedListener = SpinnerSelectedListener()
+
+    }
+
+    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
+
+            if (spinner_board.selectedItem.toString() == "KU 행정실 공지사항") {
+                adapter1 = DataAdapter(data1)
+                recyclerview.adapter = adapter1
+                adapter1.notifyDataSetChanged()
+
+                adapter2 = DataAdapter(data2)
+                recyclerview2.adapter = adapter2
+                adapter2.notifyDataSetChanged()
+                txt_recyclerView2.text = "취업공지"
+
+            } else {
+                adapter1 = DataAdapter(data3)
+                recyclerview.adapter = adapter1
+                adapter1.notifyDataSetChanged()
+
+                adapter2 = DataAdapter(data4)
+                recyclerview2.adapter = adapter2
+                adapter2.notifyDataSetChanged()
+                txt_recyclerView2.text = "특강공지"
+            }
+
+        }
 
     }
 
@@ -58,12 +97,11 @@ class Board : AppCompatActivity() {
                 val doc2 = Jsoup.connect(addr2).get()
 
                 val entries1 = doc1.select("div#board1").select("dl")
-                val entries2 = doc1.select("div#board2").select("dl")
-                val entries3 = doc2.select("div#board1").select("dl")
-                val entries4 = doc2.select("div#board2").select("dl")
+                val entries2 = doc2.select("div#board1").select("dl")
                 val eSize = entries1.size // 공지사항 개수
                 Log.v("table", eSize.toString()) // 6개로 잘 받아짐
 
+                // 공지사항
                 for (e in entries1) {
                     val title = e.select("dt").text()
                     val date = e.select("dd").text()
@@ -72,31 +110,14 @@ class Board : AppCompatActivity() {
                     data1.add(Data1(1, title, date))
                 }
 
+                // 취업공지
                 for (e in entries2) {
-                    val title = e.select("dt").text()
-                    val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                    data2.add(Data1(1, title, date))
-                }
-
-                for (e in entries3) {
-                    val title = e.select("dt").text()
-                    val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                    data1.add(Data1(2, title, date))
-                }
-
-                for (e in entries4) {
                     val title = e.select("dt").text()
                     val date = e.select("dd").text()
 //                    Log.v("entry", title)
 //                    Log.v("entry", date)
                     data2.add(Data1(2, title, date))
                 }
-
-
 
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -108,14 +129,10 @@ class Board : AppCompatActivity() {
         override fun onPostExecute(result: Void?) {
             //ArraList를 인자로 해서 어답터와 연결한다.
                 var adapter1 = DataAdapter(data1)
-                var adapter2 = DataAdapter(data2)
                 val layoutManager = LinearLayoutManager(applicationContext)
 
                 recyclerview.layoutManager = layoutManager
-                //recyclerview2.layoutManager = layoutManager
-
                 recyclerview.adapter = adapter1
-                //recyclerview2.adapter = adapter2
         }
     }
 
@@ -128,35 +145,17 @@ class Board : AppCompatActivity() {
                // Seoul Accord
                val doc2 = Jsoup.connect(addr2).get()
 
-               val entries1 = doc1.select("div#board1").select("dl")
-               val entries2 = doc1.select("div#board2").select("dl")
-               val entries3 = doc2.select("div#board1").select("dl")
+               val entries3 = doc1.select("div#board2").select("dl")
                val entries4 = doc2.select("div#board2").select("dl")
-               val eSize = entries1.size // 공지사항 개수
+               val eSize = entries3.size // 공지사항 개수
                Log.v("table", eSize.toString()) // 6개로 잘 받아짐
-
-               for (e in entries1) {
-                   val title = e.select("dt").text()
-                   val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                   data1.add(Data1(1, title, date))
-               }
-
-               for (e in entries2) {
-                   val title = e.select("dt").text()
-                   val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                   data2.add(Data1(1, title, date))
-               }
 
                for (e in entries3) {
                    val title = e.select("dt").text()
                    val date = e.select("dd").text()
 //                    Log.v("entry", title)
 //                    Log.v("entry", date)
-                   data1.add(Data1(2, title, date))
+                   data3.add(Data1(1, title, date))
                }
 
                for (e in entries4) {
@@ -164,7 +163,7 @@ class Board : AppCompatActivity() {
                    val date = e.select("dd").text()
 //                    Log.v("entry", title)
 //                    Log.v("entry", date)
-                   data2.add(Data1(2, title, date))
+                   data4.add(Data1(2, title, date))
                }
 
 
@@ -177,15 +176,10 @@ class Board : AppCompatActivity() {
        }
 
        override fun onPostExecute(result: Void?) {
-           //ArraList를 인자로 해서 어답터와 연결한다.
-           //var adapter1 = DataAdapter(data1)
-           var adapter2 = DataAdapter(data2)
+           var adapter2 = DataAdapter(data3)
            val layoutManager = LinearLayoutManager(applicationContext)
 
-           //recyclerview.layoutManager = layoutManager
            recyclerview2.layoutManager = layoutManager
-
-           //recyclerview.adapter = adapter1
            recyclerview2.adapter = adapter2
        }
 
