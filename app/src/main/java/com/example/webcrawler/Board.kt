@@ -4,19 +4,15 @@ import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_board.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.LinearLayoutManager
-import org.jetbrains.anko.*
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
+class Board : AppCompatActivity() {
     var list:ArrayList<ItemObject> = ArrayList()
     var data1:ArrayList<Data1> = ArrayList()
     var data2:ArrayList<Data1> = ArrayList()
@@ -29,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_board)
 
 //        sample()
 //        Description().execute()
