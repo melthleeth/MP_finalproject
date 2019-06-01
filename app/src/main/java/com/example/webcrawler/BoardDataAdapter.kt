@@ -6,8 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class DataAdapter (var arr: ArrayList<Data1>):
-        RecyclerView.Adapter<DataAdapter.ViewHolder>() {
+class BoardDataAdapter (var arr: ArrayList<BoardData>):
+        RecyclerView.Adapter<BoardDataAdapter.ViewHolder>() {
+
+    // 따로 만들어줘야 listview 처럼 사용 가능, 그리고 ViewHolder의 init block에서 초기화 해줘야함!!!
+    interface OnItemClickListener {
+        fun OnItemClick (holder: ViewHolder, view: View, data: BoardData, position: Int)
+    }
+    var itemClickListener:OnItemClickListener? = null
+
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context)
             .inflate(R.layout.layout_board, p0, false)
@@ -31,6 +38,11 @@ class DataAdapter (var arr: ArrayList<Data1>):
         init {
             vTitle = itemView.findViewById(R.id.txt_title)
             vDate = itemView.findViewById(R.id.txt_date)
+
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this, it, arr[position], position) }
         }
     }
+
 }

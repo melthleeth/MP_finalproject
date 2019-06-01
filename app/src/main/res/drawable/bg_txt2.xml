@@ -5,8 +5,8 @@
     />
 
     <!--<solid-->
-            <!--android:color="#61B2DFDB"/>-->
+    <!--android:color="#61B2DFDB"/>-->
 
-    <stroke android:width="6dp" android:color="@color/orange"/>
+    <stroke android:width="6dp" android:color="@color/sky_blue"/>
 
 </shape>

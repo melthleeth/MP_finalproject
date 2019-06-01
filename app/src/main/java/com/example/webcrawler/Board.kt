@@ -1,5 +1,6 @@
 package com.example.webcrawler
 
+import android.content.Intent
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -17,28 +18,77 @@ import java.io.IOException
 // ?
 class Board : AppCompatActivity() {
     var list:ArrayList<ItemObject> = ArrayList()
-    var data1:ArrayList<Data1> = ArrayList() // 공지사항
-    var data2:ArrayList<Data1> = ArrayList() // 취업공지
-    var data3:ArrayList<Data1> = ArrayList() // 공지사항
-    var data4:ArrayList<Data1> = ArrayList() // 특강공지
+    var boardData:ArrayList<BoardData> = ArrayList() // 공지사항
+    var boardData2:ArrayList<BoardData> = ArrayList() // 취업공지
+    var boardData3:ArrayList<BoardData> = ArrayList() // 공지사항
+    var boardData4:ArrayList<BoardData> = ArrayList() // 특강공지
 
     val addr1 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=11892&menuId=11896&forumId=11914&forumId=18240&titleImg=/cms/Site/UserFiles/Image/internet/main_notice_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_notice_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
     val addr2 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=3266851&menuId=12351727&forumId=12368452&forumId=12368521&titleImg=/cms/Site/UserFiles/Image/internet/main_board_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_board_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
 
+    val linkStr = "http://home.konkuk.ac.kr:80/cms/Common/MessageBoard/ArticleRead.do?forum=11914&id=" // 뒤에 아이디값 추가하면 접속됨
 
-    lateinit var adapter1: DataAdapter
-    lateinit var adapter2: DataAdapter
+    lateinit var adapter1Board: BoardDataAdapter
+    lateinit var adapter2Board: BoardDataAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
 
+        init()
+        //adapterClick()
+    }
+
+    fun init() {
+        // 데이터 web에서 읽어와서 내부 자료구조(ArrayList)에 저장
         doParse().execute()
         doParse2().execute()
+
+
+        val layoutManager = LinearLayoutManager(applicationContext)
+        recyclerview.layoutManager = layoutManager
+
+        val layoutManager2 = LinearLayoutManager(applicationContext)
+        recyclerview2.layoutManager = layoutManager2
+
+        adapter1Board = BoardDataAdapter(boardData)
+        recyclerview.adapter = adapter1Board
+
+        adapter2Board = BoardDataAdapter(boardData2)
+        recyclerview2.adapter = adapter2Board
 
         spinner_board.onItemSelectedListener = SpinnerSelectedListener()
 
     }
+
+    fun adapterClick() {
+        // recyclerview가 아니라 adapter..
+        adapter1Board.itemClickListener = object: BoardDataAdapter.OnItemClickListener {
+            override fun OnItemClick(holder: BoardDataAdapter.ViewHolder, view: View, data: BoardData, position: Int) {
+//                Toast.makeText(applicationContext, data.dId, Toast.LENGTH_SHORT).show()
+//                Log.v("test1", data.dId)
+
+                val i = Intent(applicationContext, Board_detail::class.java)
+                i.putExtra("menuId", data.dId)
+                startActivity(i)
+
+            }
+        }
+        recyclerview.adapter = adapter1Board
+
+        adapter2Board.itemClickListener = object: BoardDataAdapter.OnItemClickListener {
+            override fun OnItemClick(holder: BoardDataAdapter.ViewHolder, view: View, data: BoardData, position: Int) {
+//                Toast.makeText(applicationContext, data.dId, Toast.LENGTH_SHORT).show()
+//                Log.v("test2", data.dId)
+
+                val i = Intent(applicationContext, Board_detail::class.java)
+                i.putExtra("menuId", data.dId)
+                startActivity(i)
+            }
+        }
+        recyclerview2.adapter = adapter2Board
+    }
+
 
     inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -48,25 +98,33 @@ class Board : AppCompatActivity() {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
 
-            if (spinner_board.selectedItem.toString() == "KU 행정실 공지사항") {
-                adapter1 = DataAdapter(data1)
-                recyclerview.adapter = adapter1
-                adapter1.notifyDataSetChanged()
+            // spinner_board.selectedItem.toString()
+            if (parent?.getItemAtPosition(position).toString() == "KU 행정실 공지사항") {
+                adapter1Board = BoardDataAdapter(boardData)
+                recyclerview.adapter = adapter1Board
+                adapter1Board.notifyDataSetChanged()
 
-                adapter2 = DataAdapter(data2)
-                recyclerview2.adapter = adapter2
-                adapter2.notifyDataSetChanged()
+                adapter2Board = BoardDataAdapter(boardData2)
+                recyclerview2.adapter = adapter2Board
+                adapter2Board.notifyDataSetChanged()
                 txt_recyclerView2.text = "취업공지"
+                txt_recyclerView1.setBackgroundResource(R.drawable.bg_txt1)
+                txt_recyclerView2.setBackgroundResource(R.drawable.bg_txt1)
 
+                adapterClick()
             } else {
-                adapter1 = DataAdapter(data3)
-                recyclerview.adapter = adapter1
-                adapter1.notifyDataSetChanged()
+                adapter1Board = BoardDataAdapter(boardData3)
+                recyclerview.adapter = adapter1Board
+                adapter1Board.notifyDataSetChanged()
 
-                adapter2 = DataAdapter(data4)
-                recyclerview2.adapter = adapter2
-                adapter2.notifyDataSetChanged()
+                adapter2Board = BoardDataAdapter(boardData4)
+                recyclerview2.adapter = adapter2Board
+                adapter2Board.notifyDataSetChanged()
                 txt_recyclerView2.text = "특강공지"
+                txt_recyclerView1.setBackgroundResource(R.drawable.bg_txt2)
+                txt_recyclerView2.setBackgroundResource(R.drawable.bg_txt2)
+
+                adapterClick()
             }
 
         }
@@ -98,25 +156,32 @@ class Board : AppCompatActivity() {
 
                 val entries1 = doc1.select("div#board1").select("dl")
                 val entries2 = doc2.select("div#board1").select("dl")
-                val eSize = entries1.size // 공지사항 개수
-                Log.v("table", eSize.toString()) // 6개로 잘 받아짐
+//                val eSize = entries1.size // 공지사항 개수
+//                Log.v("table", eSize.toString()) // 6개로 잘 받아짐
 
                 // 공지사항
                 for (e in entries1) {
                     val title = e.select("dt").text()
                     val date = e.select("dd").text()
+                    val hrefStr = e.select("dt a").attr("href")
+                    val hrefSize = hrefStr.length
+                    val menuId = hrefStr.substring(hrefSize-10 .. hrefSize-3) // 각 페이지 링크 접속하게 해주는 id 추출
 //                    Log.v("entry", title)
 //                    Log.v("entry", date)
-                    data1.add(Data1(1, title, date))
+//                    Log.v("menuId", menuId)
+
+                    boardData.add(BoardData(menuId, title, date))
                 }
 
                 // 취업공지
                 for (e in entries2) {
                     val title = e.select("dt").text()
                     val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                    data2.add(Data1(2, title, date))
+                    val hrefStr = e.select("dt a").attr("href")
+                    val hrefSize = hrefStr.length
+                    val menuId = hrefStr.substring(hrefSize-10 .. hrefSize-3)
+
+                    boardData2.add(BoardData(menuId, title, date))
                 }
 
             } catch (e: IOException) {
@@ -128,11 +193,11 @@ class Board : AppCompatActivity() {
 
         override fun onPostExecute(result: Void?) {
             //ArraList를 인자로 해서 어답터와 연결한다.
-                var adapter1 = DataAdapter(data1)
-                val layoutManager = LinearLayoutManager(applicationContext)
-
-                recyclerview.layoutManager = layoutManager
-                recyclerview.adapter = adapter1
+//                var adapter1 = BoardDataAdapter(boardData)
+//                val layoutManager = LinearLayoutManager(applicationContext)
+//
+//                recyclerview.layoutManager = layoutManager
+//                recyclerview.adapter = adapter1
         }
     }
 
@@ -147,23 +212,27 @@ class Board : AppCompatActivity() {
 
                val entries3 = doc1.select("div#board2").select("dl")
                val entries4 = doc2.select("div#board2").select("dl")
-               val eSize = entries3.size // 공지사항 개수
-               Log.v("table", eSize.toString()) // 6개로 잘 받아짐
+//               val eSize = entries3.size // 공지사항 개수
+//               Log.v("table", eSize.toString()) // 6개로 잘 받아짐
 
                for (e in entries3) {
                    val title = e.select("dt").text()
                    val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                   data3.add(Data1(1, title, date))
+                   val hrefStr = e.select("dt a").attr("href")
+                   val hrefSize = hrefStr.length
+                   val menuId = hrefStr.substring(hrefSize-10 .. hrefSize-3)
+
+                   boardData3.add(BoardData(menuId, title, date))
                }
 
                for (e in entries4) {
                    val title = e.select("dt").text()
                    val date = e.select("dd").text()
-//                    Log.v("entry", title)
-//                    Log.v("entry", date)
-                   data4.add(Data1(2, title, date))
+                   val hrefStr = e.select("dt a").attr("href")
+                   val hrefSize = hrefStr.length
+                   val menuId = hrefStr.substring(hrefSize-9 .. hrefSize-3) // 이것만 7개
+
+                   boardData4.add(BoardData(menuId, title, date))
                }
 
 
@@ -176,11 +245,11 @@ class Board : AppCompatActivity() {
        }
 
        override fun onPostExecute(result: Void?) {
-           var adapter2 = DataAdapter(data3)
-           val layoutManager = LinearLayoutManager(applicationContext)
-
-           recyclerview2.layoutManager = layoutManager
-           recyclerview2.adapter = adapter2
+//           var adapter2 = BoardDataAdapter(boardData3)
+//           val layoutManager = LinearLayoutManager(applicationContext)
+//
+//           recyclerview2.layoutManager = layoutManager
+//           recyclerview2.adapter = adapter2
        }
 
    }

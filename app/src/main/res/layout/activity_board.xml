@@ -11,6 +11,7 @@
         android:background="@color/bg_green">
 
     <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Board"
@@ -21,16 +22,29 @@
             android:textColor="#000000"
             android:textAlignment="center"/>
 
-    <Spinner
-            android:id="@+id/spinner_board"
-            android:background="#ffffff"
+    <LinearLayout
+            android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:prompt="@string/prompt_board"
-            android:entries="@array/arr_board">
-    </Spinner>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_btn1">
+
+        <Spinner
+                android:id="@+id/spinner_board"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:prompt="@string/prompt_board"
+                android:entries="@array/arr_board">
+        </Spinner>
+
+
+    </LinearLayout>
+
 
     <TextView
+            android:id="@+id/txt_recyclerView1"
             android:text="공지사항"
             android:paddingVertical="10dp"
             android:paddingHorizontal="30dp"
@@ -61,7 +75,7 @@
             android:textSize="18sp"
             android:textColor="@color/txt_green"
             android:textStyle="bold"
-            android:background="@drawable/bg_txt1"
+            android:background="@drawable/bg_txt2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"/>
