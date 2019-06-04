@@ -12,6 +12,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".Board_more">
+        </activity>
         <activity android:name=".Board_detail">
         </activity>
         <activity android:name=".Board">
@@ -21,15 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!--<activity android:name=".complian_add">-->
-        <!--</activity>-->
-        <!--<activity android:name=".civil_compliant">-->
-        <!--</activity>-->
-        <!--<activity android:name=".CreateAccountActivity">-->
-        <!--</activity>-->
-        <!--<activity android:name=".MainActivity">-->
-
-        <!--</activity>-->
     </application>
 
 </manifest>

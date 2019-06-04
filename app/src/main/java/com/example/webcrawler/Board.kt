@@ -27,15 +27,25 @@ class Board : AppCompatActivity() {
     val addr2 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=3266851&menuId=12351727&forumId=12368452&forumId=12368521&titleImg=/cms/Site/UserFiles/Image/internet/main_board_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_board_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
 
     val linkStr = "http://home.konkuk.ac.kr:80/cms/Common/MessageBoard/ArticleRead.do?forum=11914&id=" // 뒤에 아이디값 추가하면 접속됨
+    val linkStr2 = "http://home.konkuk.ac.kr:80/cms/Common/MessageBoard/ArticleRead.do?forum="
+
+    // KU 행정실 공지사항
+    val id1 = 11914 // 공지사항
+    val id2 = 18240 // 취업공지
+    // SEOUL ACCORD
+    val id3 = 12368452 // 공지사항
+    val id4 = 12368521 // 특강공지
 
     lateinit var adapter1Board: BoardDataAdapter
     lateinit var adapter2Board: BoardDataAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_board)
 
         init()
+        Log.i("on", "onCreate()")
         //adapterClick()
     }
 
@@ -61,6 +71,36 @@ class Board : AppCompatActivity() {
 
     }
 
+
+    // 각 메뉴에 맞는 게시판으로 연결
+    fun txt_moreClick(view: View) {
+        var url = ""
+
+        when (view.id) {
+            R.id.txt_more1 -> {
+                if (spinner_board.selectedItem.toString() == "KU 행정실 공지사항") {
+                    url = linkStr2 + id1 // 행정실 공지
+                } else {
+                    url = linkStr2 + id3 // 서울어코드 공지
+                }
+            }
+
+            R.id.txt_more2 -> {
+                if (spinner_board.selectedItem.toString() == "KU 행정실 공지사항") {
+                    url = linkStr2 + id2 // 취업공지
+                } else {
+                    url = linkStr2 + id4 // 특강공지
+                }
+            }
+        }
+
+        val i = Intent(applicationContext, Board_more::class.java)
+        i.putExtra("url", url)
+        startActivity(i)
+    }
+
+
+    // adapter listener
     fun adapterClick() {
         // recyclerview가 아니라 adapter..
         adapter1Board.itemClickListener = object: BoardDataAdapter.OnItemClickListener {
@@ -90,7 +130,8 @@ class Board : AppCompatActivity() {
     }
 
 
-    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
+    // spinner 선택되어있는데 안뜨는 문제 해결: 네트워크 문제임
+   inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
 
         }
@@ -131,19 +172,6 @@ class Board : AppCompatActivity() {
 
     }
 
-
-
-    fun sample() {
-        val html =
-            "<html><head><title>첫번째 예제입니다.</title></head>" +
-                    "<body><h1>테스트</h1><p>간단히 HTML을 파싱해 보는 샘플예제입니다.</p></body></html>"
-
-        val doc = Jsoup.parse(html)
-
-        val title = doc.select("title")
-        Log.d("result: ", "doc= $doc")
-        Log.d("result: ", "title= $title")
-    }
 
     inner class doParse : AsyncTask<Void, Void, Void>() {
 

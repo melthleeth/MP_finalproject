@@ -5,7 +5,7 @@
     />
 
     <!--<solid-->
-    <!--android:color="#61B2DFDB"/>-->
+    <!--android:color="@color/white"/>-->
 
     <stroke android:width="6dp" android:color="@color/sky_blue"/>
 

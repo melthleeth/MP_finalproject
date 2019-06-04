@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">WebCrawler</string>
 
-    <string name="txt_board1">취업공지</string>
-    <string name="txt_board2">특강공지</string>
+    <string name="txt_board1">공지사항</string>
+    <string name="txt_board2">취업공지</string>
+    <string name="txt_board3">특강공지</string>
+    <string name="txt_more">+더보기</string>
 
     <string name="prompt_board">공지사항 선택</string>
     <string-array name="arr_board">
