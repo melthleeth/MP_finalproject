@@ -30,7 +30,14 @@ class Board_more : AppCompatActivity() {
         override fun doInBackground(vararg params: Void): Void? {
             try {
                 val doc = Jsoup.connect(url).get()
-                val entries = doc.select("tbody").select("dl")
+                val entries = doc.select("tbody").select("tr")
+
+                for (e in entries) {
+                    val title = e.select("td").next().text()
+                    //val date = e.select("td").next().next().next().text()
+                    Log.v("board", title)
+                    //Log.v("board", date)
+                }
 
 
 

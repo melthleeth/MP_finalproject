@@ -27,7 +27,7 @@ class Board : AppCompatActivity() {
     val addr2 = "http://home.konkuk.ac.kr/cms/Site/ControlReader/MiniBoardList/miniboard_list_etype_ku_board.jsp?siteId=im&menuId=3266851&menuId=12351727&forumId=12368452&forumId=12368521&titleImg=/cms/Site/UserFiles/Image/internet/main_board_title.gif&tabImg=/cms/Site/UserFiles/Image/internet/main_board_tab0&rowsNum=6&moreImg=/cms/Site/UserFiles/Image/internet/btn_more.gif"
 
     val linkStr = "http://home.konkuk.ac.kr:80/cms/Common/MessageBoard/ArticleRead.do?forum=11914&id=" // 뒤에 아이디값 추가하면 접속됨
-    val linkStr2 = "http://home.konkuk.ac.kr:80/cms/Common/MessageBoard/ArticleRead.do?forum="
+    val linkStr2 = "http://home.konkuk.ac.kr/cms/Common/MessageBoard/ArticleList.do?forum="
 
     // KU 행정실 공지사항
     val id1 = 11914 // 공지사항
@@ -167,6 +167,7 @@ class Board : AppCompatActivity() {
 
                 adapterClick()
             }
+
 
         }
 
